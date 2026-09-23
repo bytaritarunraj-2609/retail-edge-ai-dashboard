@@ -1,28 +1,32 @@
 import { useState, useEffect } from 'react';
 import { DashboardData } from '../types';
 import { mockAdapterInstance } from '../adapters/MockIntelligenceAdapter';
+import { liveAdapterInstance } from '../adapters/LiveIntelligenceAdapter';
 
 export function useIntelligence(): DashboardData | null {
-  const [data, setData] = useState<DashboardData | null>(mockAdapterInstance.getDashboardData());
+  const source = import.meta.env.VITE_INTELLIGENCE_SOURCE;
+  const adapter = source === 'live-test' ? liveAdapterInstance : mockAdapterInstance;
+
+  const [data, setData] = useState<DashboardData | null>(adapter.getDashboardData());
 
   useEffect(() => {
     // Initial set in case it updated before effect ran
-    setData(mockAdapterInstance.getDashboardData());
+    setData(adapter.getDashboardData());
     
     // Subscribe to any updates (e.g. from manager mutations or simulation ticks)
-    const unsubscribe = mockAdapterInstance.subscribe(() => {
-      setData(mockAdapterInstance.getDashboardData());
+    const unsubscribe = adapter.subscribe(() => {
+      setData(adapter.getDashboardData());
     });
     
     const interval = setInterval(() => {
-      mockAdapterInstance.tickSimulation();
+      adapter.tickSimulation();
     }, 5000);
 
     return () => {
       unsubscribe();
       clearInterval(interval);
     };
-  }, []);
+  }, [adapter]);
 
   return data;
 }

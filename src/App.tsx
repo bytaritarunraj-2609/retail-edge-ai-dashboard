@@ -46,6 +46,24 @@ export function App() {
       <Sidebar active={activePage} setActive={setActivePage} />
       <section className="main">
         <Header active={activePage} />
+        {import.meta.env.VITE_INTELLIGENCE_SOURCE === 'live-test' && (
+          <div className="glass" style={{
+            position: 'absolute',
+            top: 10,
+            right: 200,
+            zIndex: 100,
+            fontSize: '0.65rem',
+            padding: '4px 8px',
+            color: 'var(--accent)',
+            border: '1px solid var(--border)',
+            borderRadius: 4,
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px'
+          }}>
+            AI SOURCE: TEST TELEMETRY <br />
+            YOLO11n + ByteTrack
+          </div>
+        )}
         {activePage === 'Overview' ? (
           <Overview />
         ) : activePage === 'Footfall' ? (

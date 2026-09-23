@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Shelf, Camera, ShelfState } from '../../types';
 import { Glass } from '../ui/Glass';
-import { X, CheckCircle2 } from 'lucide-react';
+import { X, CheckCircle2, Camera as CameraIcon } from 'lucide-react';
 import { useAppSettings } from '../../contexts/AppSettingsContext';
 import { mockAdapterInstance } from '../../adapters/MockIntelligenceAdapter';
+import { WebcamShelfPrototype } from './WebcamShelfPrototype';
 
 interface ShelfDetailDrawerProps {
   shelf: Shelf | null;
@@ -14,6 +15,7 @@ interface ShelfDetailDrawerProps {
 
 export function ShelfDetailDrawer({ shelf, camera, onClose }: ShelfDetailDrawerProps) {
   const { settings } = useAppSettings();
+  const [showPrototype, setShowPrototype] = useState(false);
 
   const handleStatusChange = (newStatus: ShelfState) => {
     if (shelf) mockAdapterInstance.updateShelfStatus(shelf.id, newStatus, shelf.isRectified);
@@ -126,6 +128,32 @@ export function ShelfDetailDrawer({ shelf, camera, onClose }: ShelfDetailDrawerP
                   </div>
                 </div>
 
+                {camera.id === 3 && (
+                  <div style={{ marginTop: '16px' }}>
+                    <button 
+                      onClick={() => setShowPrototype(true)}
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        background: 'rgba(118,239,175,0.1)',
+                        border: '1px solid var(--color-green)',
+                        color: 'var(--color-green)',
+                        borderRadius: 'var(--radius-md)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        fontWeight: 600,
+                        fontSize: '12px',
+                        letterSpacing: '0.05em'
+                      }}
+                    >
+                      <CameraIcon size={16} />
+                      LAUNCH SHELF CAM PROTOTYPE
+                    </button>
+                  </div>
+                )}
+
                 <div className="drawer-footer">
                   <div className="ai-badge">
                     <span>SIMULATED EDGE AI</span>
@@ -135,6 +163,42 @@ export function ShelfDetailDrawer({ shelf, camera, onClose }: ShelfDetailDrawerP
               </div>
             </Glass>
           </motion.div>
+
+          {/* FULL SCREEN PROTOTYPE MODAL */}
+          <AnimatePresence>
+            {showPrototype && camera.id === 3 && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                style={{
+                  position: 'fixed',
+                  inset: '24px',
+                  zIndex: 1000,
+                  background: 'var(--bg-app)',
+                  borderRadius: '16px',
+                  border: '1px solid var(--glass-border)',
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  overflow: 'hidden'
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div style={{ padding: '16px', display: 'flex', justifyContent: 'flex-end', borderBottom: '1px solid var(--glass-border)' }}>
+                  <button onClick={() => setShowPrototype(false)} className="close-btn" style={{ padding: '8px', background: 'var(--glass-surface-l2)', borderRadius: '50%' }}>
+                    <X size={20} />
+                  </button>
+                </div>
+                <div style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
+                  <WebcamShelfPrototype 
+                    cameraId={camera.id} 
+                    onClose={() => setShowPrototype(false)} 
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       )}
     </AnimatePresence>
