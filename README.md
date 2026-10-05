@@ -160,7 +160,7 @@ This optimizes edge-device processing capacity by only performing full inference
 
 ```bash
 npm install
-npm run dev
+npm run prod
 ```
 
 The dashboard will be available at:
