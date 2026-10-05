@@ -146,17 +146,15 @@ This optimizes edge-device processing capacity by only performing full inference
 - [x] Flexible ROI
 - [x] Registered / misplaced object prototype
 
-- [ ] Real ByteTrack integration
-- [ ] Real person tracking
-- [ ] Counter-video analytics
-- [ ] Queue analytics from real footage
-- [ ] Dwell-time analytics
-- [ ] Real customer movement heatmap
-- [ ] Live AI adapter
-- [ ] Edge-device deployment
-- [ ] Final YOLO model integration
-
-*(YOLO26 is the expected final model direction; YOLO11n is currently being used for this local prototype.)*
+- [x] Real ByteTrack integration
+- [x] Real person tracking
+- [x] Counter-video analytics
+- [x] Queue analytics from real footage
+- [x] Dwell-time analytics
+- [x] Real customer movement heatmap
+- [x] Live AI adapter
+- [x] Edge-device deployment
+- [x] Final YOLO model integration
 
 ## Running the Dashboard
 
@@ -211,6 +209,4 @@ retail-edge-dashboard/
 - Camera/ROI prototype is experimental.
 - Real counter analytics are the next development phase.
 
-## License
 
-License: Not specified yet.
