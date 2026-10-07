@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RetailEdge AI — Store Intelligence</title>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><span></span><span></span><span></span></div>
+      <div><strong>RetailEdge AI</strong><small>Smarter Stores<br>Brighter Tomorrow</small></div>
+    </div>
+    <nav class="side-nav" aria-label="Primary"><span class="liquid-pill" id="liquidPill" aria-hidden="true"></span>
+      <button class="side-item active" data-section="overview"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
+      <button class="side-item" data-section="store-map"><i data-lucide="map"></i><span>Store Map</span></button>
+      <button class="side-item" data-section="inventory"><i data-lucide="package"></i><span>Inventory</span></button>
+      <button class="side-item" data-section="team"><i data-lucide="users-round"></i><span>Team</span></button>
+      <button class="side-item" data-section="footfall"><i data-lucide="bar-chart-3"></i><span>Footfall</span></button>
+      <button class="side-item" data-section="heatmap"><i data-lucide="scan-line"></i><span>Heatmap</span></button>
+      <button class="side-item" data-section="zone-activity"><i data-lucide="activity"></i><span>Zone Activity</span></button>
+    </nav>
+    <div class="optimizer-card">
+      <div class="optimizer-head"><i data-lucide="activity"></i><b>AI Optimizer</b><span class="live-dot"></span></div>
+      <small>Active</small>
+      <p>Dynamic camera scheduling based on zone activity.</p>
+    </div>
+    <div class="side-bottom">
+      <div class="profile"><span class="avatar">TR</span><div><b>Tarun</b><small>Store Manager</small></div><i data-lucide="chevron-down"></i></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="mobile-menu" id="mobileMenu"><i data-lucide="menu"></i></button>
+      <div class="search-box"><i data-lucide="search"></i><span>Search shelf, product, or zone...</span><kbd>⌘K</kbd></div>
+      <div class="store-meta"><span class="store-status"><i></i> Store 024 · Chennai</span><span class="online-text">● Online</span></div>
+      <div class="clock" id="liveClock"><span id="clockDate">Sunday, 20 Sep 2026</span><b id="clockTime">03:24 PM</b></div>
+      <button class="icon-button" id="notificationBtn" aria-label="Notifications"><i data-lucide="bell"></i><em id="notificationDot"></em></button><div class="notification-popover glass-panel hidden" id="notificationPopover"><div class="popover-head"><b>Notifications</b><span id="popoverCount">3</span></div><div id="notificationItems"></div></div>
+      <button class="icon-button" id="themeToggle" aria-label="Toggle bright mode and dark mode"><i data-lucide="sun"></i></button>
+      <div class="top-avatar">TR</div>
+    </header>
+
+    <section class="content">
+      <div class="dashboard-view" id="overviewView">
+      <div class="kpi-grid">
+        <article class="kpi-card mint magnetic"><div class="kpi-label">Footfall <span class="trend up">↑ 12%</span></div><strong id="footfall">1,284</strong><small>people today</small><div class="mini-bars"><i></i><i></i><i></i><i></i></div></article>
+        <article class="kpi-card blue magnetic"><div class="kpi-label">Average wait <span class="trend">↓ 18%</span></div><strong id="avgWait">4.2 min</strong><small>at checkout</small><div class="mini-bars blue-bars"><i></i><i></i><i></i></div></article>
+        <article class="kpi-card rose magnetic"><div class="kpi-label">Stockouts <span class="trend bad">↑ 200%</span></div><strong id="stockouts">3</strong><small>items today</small><div class="mini-bars rose-bars"><i></i><i></i><i></i></div></article>
+        <article class="kpi-card green magnetic"><div class="kpi-label">Shelf availability <span class="trend up">↑ 2.3%</span></div><strong id="availability">96.4%</strong><small>of total shelves</small><div class="mini-bars green-bars"><i></i><i></i><i></i><i></i></div></article>
+        <article class="kpi-card live-ai magnetic"><div class="live-title">Live AI <span class="running"><i></i> Running</span></div><div class="wave"><span></span><span></span><span></span><span></span><span></span><span></span></div><small>Optimizing camera cycles...</small></article>
+      </div>
+
+      <section class="bottom-grid">
+        <article class="panel chart-panel magnetic"><div class="panel-head"><div><h2>Footfall Today</h2><p>Hover bars to inspect exact count</p></div><button class="small-select">Today <i data-lucide="chevron-down"></i></button></div><div class="chart-wrap"><canvas id="footfallChart"></canvas></div></article>
+        <article class="panel zone-panel magnetic"><div class="panel-head"><div><h2>Zone Activity</h2><p>Scheduling priority</p></div></div><div id="zoneActivity"></div></article>
+        <article class="panel events-panel magnetic"><div class="panel-head"><div><h2>Recent Events</h2></div><button class="text-button">View all</button></div><div id="recentEvents"></div></article>
+        <article class="panel next-floor-panel magnetic"><div class="panel-head"><div><h2>Next Floor Preview</h2></div><button class="floor-chip" id="previewFloor">Floor 2</button></div><div class="mini-floor-preview" id="miniFloorPreview"></div></article>
+      </section>
+      </div>
+
+      <section class="dashboard-view hidden-view" id="storeMapSection">
+        <div class="map-header"><div class="map-view-badge">STORE MAP</div>
+          <div><button class="floor-title" id="floorTitle">Ground Floor <i data-lucide="chevron-down"></i></button><p><span id="shelfTotal">20 shelves</span> · 4 zones · <span id="activeCount">4 cameras</span> active</p></div>
+          <div class="floor-actions"><button class="next-floor" id="nextFloor">Next Floor <i data-lucide="arrow-right"></i></button><div class="floor-switch"><button class="floor-btn active" data-floor="1">Floor 1</button><button class="floor-btn" data-floor="2">Floor 2</button></div></div>
+        </div>
+        <div class="map-layout">
+          <div class="map-area">
+            <div class="map-legend"><span><i class="legend on"></i> Camera ON</span><span><i class="legend off"></i> Camera OFF</span><span><i class="legend active-zone"></i> Zone active</span><span><i class="legend low-zone"></i> Zone low activity</span></div>
+            <div class="floor-map" id="floorMap">
+              <div class="map-wall wall-top"></div><div class="map-wall wall-left"></div><div class="map-wall wall-right"></div><div class="map-wall wall-bottom"></div>
+              <div class="entrance-label">Entrance<br><b>↔</b><br>↑</div><div class="receiving-label">Receiving →</div><div class="checkout-label">Checkout<br>↔</div><div class="exit-label">Exit<br>→</div>
+              <div class="zone-bg zone-a"><b>Zone A</b><span>High activity</span></div>
+              <div class="zone-bg zone-b"><b>Zone B</b><span>Moderate activity</span></div>
+              <div class="zone-bg zone-c"><b>Zone C</b><span>Low activity</span></div>
+              <div class="zone-bg zone-d"><b>Zone D</b><span>Moderate activity</span></div>
+              <div id="shelves"></div>
+            </div>
+            <div class="cycle-bar">
+              <div><span class="eyebrow">ADAPTIVE CAMERA CYCLE</span><strong id="cycleTitle">Batch 1 · Cameras 01–04</strong><small id="cycleMeta">Zone A · highest priority · 2 min capture interval</small></div>
+              <div class="cycle-actions"><span id="cycleProgress">1 / 5</span><button id="cycleToggle" class="dark-button">Turn OFF current 4</button></div>
+            </div>
+          </div>
+
+          <aside class="shelf-panel" id="shelfPanel">
+            <div class="panel-head"><div><span class="eyebrow">SHELF INSIGHT</span><h2 id="panelShelf">Shelf 03 - Biscuits</h2></div><button id="panelClose" class="close-button">×</button></div>
+            <div class="product-row"><div class="product-thumb" id="productThumb">03</div><div><b id="productName">Britannia Good Day</b><small id="productCategory">Biscuits</small><span class="stock-pill" id="stockPill">● IN STOCK</span></div></div>
+            <div class="units-row"><strong id="unitCount">42</strong><span>units detected</span><div class="unit-bar"><i id="unitBar"></i></div></div>
+            <div class="capture-grid"><div><small>Last captured</small><b id="lastCaptured">2 min ago</b></div><div><small>Next capture</small><b id="nextCaptured">in 3 min</b></div><div><small>Capture interval</small><b id="captureInterval">3 min (dynamic)</b></div></div>
+            <div class="insight-block"><h3>AI Insights</h3><div class="insight-grid"><div><b id="confidence">94%</b><small>confidence</small></div><div><b id="misplaced">0</b><small>misplaced objects</small></div><div><b class="normal-dot">●</b><small id="condition">Normal shelf condition</small></div></div></div>
+            <div class="alert-feed glass-inner">
+              <div class="alert-feed-head"><span class="eyebrow">ACTIVE ALERTS</span><span class="alert-count" id="alertCount">0</span></div>
+              <div id="alertList"><div class="empty-alert">No active stockout alerts</div></div>
+            </div>
+            <button class="detail-button" id="detailButton">View detailed report <i data-lucide="arrow-right"></i></button>
+          </aside>
+        </div>
+      </section>
+
+      
+      <section class="dashboard-view hidden-view" id="inventoryView">
+        <div class="view-heading"><div><span class="eyebrow">INVENTORY</span><h1>Stock intelligence</h1><p>What is available, what needs to be bought, and what needs to be refilled.</p></div></div>
+        <div class="inventory-summary">
+          <div class="glass-stat"><span>Available</span><strong>17</strong><small>products healthy</small></div>
+          <div class="glass-stat"><span>To buy</span><strong>3</strong><small>purchase queue</small></div>
+          <div class="glass-stat"><span>To refill</span><strong>6</strong><small>restock queue</small></div>
+        </div>
+        <div class="inventory-grid" id="inventoryGrid"></div>
+      </section>
+
+      <section class="dashboard-view hidden-view" id="teamView">
+        <div class="view-heading"><div><span class="eyebrow">TEAM</span><h1>Store team</h1><p>Deploy the right person to the right zone.</p></div></div>
+        <div class="team-grid" id="teamGrid"></div>
+      </section>
+
+      <section class="dashboard-view hidden-view" id="footfallView">
+        <div class="view-heading"><div><span class="eyebrow">FOOTFALL</span><h1>Store traffic</h1><p>Hourly shopper volume with cursor-sensitive inspection.</p></div></div>
+        <div class="glass-chart-card"><div class="chart-wrap large-chart"><canvas id="footfallChartLarge"></canvas></div></div>
+      </section>
+
+      <section class="dashboard-view hidden-view" id="heatmapView">
+        <div class="view-heading"><div><span class="eyebrow">HEATMAP</span><h1>Where the store gets busy</h1><p>Exemplar activity intensity across the retail floor.</p></div></div>
+        <div class="heatmap-layout">
+          <div class="glass-heatmap">
+            <div class="heat-floor">
+              <div class="heat-zone h1">ENTRANCE</div><div class="heat-zone h2">PRODUCE</div><div class="heat-zone h3">BEVERAGES</div>
+              <div class="heat-zone h4">GROCERY</div><div class="heat-zone h5">CHECKOUT</div><div class="heat-zone h6">SERVICE</div>
+            </div>
+            <div class="heat-legend"><span>Low</span><i></i><span>High</span></div>
+          </div>
+          <div class="glass-insights"><span class="eyebrow">INSIGHTS</span><h2>Peak zone: Checkout</h2><p>Highest activity is concentrated around checkout and the beverage aisle.</p><div class="insight-line"><b>18:00–20:00</b><span>Peak period</span></div><div class="insight-line"><b>Produce</b><span>Lowest activity</span></div></div>
+        </div>
+      </section>
+
+      <section class="dashboard-view hidden-view" id="zoneActivityView">
+        <div class="view-heading"><div><span class="eyebrow">ZONE ACTIVITY</span><h1>Adaptive workload</h1><p>Activity drives the next shelf-camera capture interval.</p></div></div>
+        <div class="zone-table glass-table" id="zoneTable"></div>
+      </section>
+
+
+    </section>
+  </main>
+</div>
+
+<div class="search-overlay hidden" id="searchOverlay"><div class="search-modal glass-panel"><div class="search-input"><i data-lucide="search"></i><input id="globalSearch" placeholder="Search product, shelf, worker or zone..." autofocus><kbd>ESC</kbd></div><div class="search-hints"><span>Try “Maggi”</span><span>Try “Shelf 04”</span><span>Try “Checkout”</span></div></div></div>
+<div class="modal hidden" id="detailModal"><div class="modal-card"><button class="modal-close" id="modalClose">×</button><span class="eyebrow">DETAILED SHELF REPORT</span><h2 id="modalTitle">Shelf 03 — Biscuits</h2><div class="modal-stats"><div><small>Camera</small><b id="modalCam">ON</b></div><div><small>Zone</small><b id="modalZone">Zone A</b></div><div><small>Units</small><b id="modalUnits">42</b></div><div><small>Confidence</small><b id="modalConf">94%</b></div></div><div class="modal-note"><i data-lucide="scan-search"></i><p id="modalText">Periodic JPEG capture is scheduled from this shelf according to zone activity.</p></div></div></div>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+# Frontend
+node_modules/
+dist/
+
+# Backend
+.venv/
+__pycache__/
+*.pyc
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Database / local runtime data
+*.db
+*.sqlite
+*.sqlite3
+
+# Model weights / generated ML binaries
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Misc
+*.tmp
+*.temp
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Antigravity agents
+.agents/
